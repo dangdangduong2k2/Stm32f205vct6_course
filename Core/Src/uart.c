@@ -42,3 +42,17 @@ void uart_sendstring(const char* str)
     }
     
 }
+
+int convert(const char* chuoi) {
+    int so = 0;
+    int i = 0;
+    
+    while (chuoi[i] != '\0') {
+        if (chuoi[i] >= '0' && chuoi[i] <= '9') {
+            so = so * 10 + (chuoi[i] - '0');
+        }
+        i++;
+    }
+    return so;
+}
+

@@ -859,7 +859,7 @@
                 <expressions>
                     <item>SystemCoreClock</item>
                     <item>data</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

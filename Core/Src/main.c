@@ -3,11 +3,17 @@
 #include "gpio.h" 
 #include "timer.h" 
 #include "uart.h" 
-
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
 uint32_t time20ms = 0;
 uint8_t data;
 
 uart2 Uart2;
+uint32_t temp=0;
+uint32_t count;
+
+
 void TIM1_UP_TIM10_IRQHandler(void) 
 {   
     TIM1->SR &= ~TIM_SR_UIF; 
@@ -28,14 +34,24 @@ void TIM1_UP_TIM10_IRQHandler(void)
 }
 void TIM2_IRQHandler(void) 
 {    
-     TIM2->SR &= ~TIM_SR_UIF;   
+  if(temp>0)
+  {
+    count++;
+    if(count==temp)
+    {
+      gpio_write(GPIOB,0,1);
+      count=0;
+      temp=0;
+    }
+  }
+  TIM2->SR &= ~TIM_SR_UIF;   
 }
 
 
 void USART2_IRQHandler(void) {
     if (USART2->SR & USART_SR_RXNE) 
-    {          
-        Uart2.data = USART1->DR;
+    {
+        Uart2.data = USART2->DR;
         if (Uart2.data == 0x0A) //enter
         {    
             Uart2.index = 0;
@@ -43,18 +59,17 @@ void USART2_IRQHandler(void) {
         } 
         else 
         {
-           
-            
             Uart2.buffer[Uart2.index++] = Uart2.data;
 
             if (Uart2.index >= 5) 
             {  
                 Uart2.index = 0;        
             }
-        }  
+        }
+        temp = convert(Uart2.buffer);
         
         USART2->SR &= ~USART_SR_RXNE;
-    }
+    } 
 }
 
 int main(void)
@@ -107,6 +122,8 @@ int main(void)
           gpio_write(GPIOB,0,1);
         }
     }
+    
+    
   }
 
 }
