@@ -22,3 +22,23 @@ void uart2_init(void)
     
     NVIC->ISER[1] |= (1 << 6);
 }
+
+
+void uart_sendchar(uint8_t ch)
+{
+   
+    while (!(USART1->SR & USART_SR_TXE));
+
+    USART1->DR = ch;
+}
+
+
+void uart_sendstring(const char* str)
+{
+    while (*str != '\0')
+    {
+        uart_sendchar(*str); 
+        str++; 
+    }
+    
+}
