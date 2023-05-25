@@ -9,6 +9,7 @@ extern "C" {
 #include "stm32f2xx_hal.h"
 void timer2_init(void);
 void timer1_init(void);
+void timer3_init(void);
 
 #ifdef __cplusplus
 }

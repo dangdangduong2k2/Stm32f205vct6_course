@@ -24,3 +24,14 @@ void timer2_init(void)
     TIM2->CR1 |= TIM_CR1_CEN;
 }    
 
+void timer3_init(void)
+{    
+    TIM3->CR1 &= ~TIM_CR1_DIR;
+    TIM3->CR1 &= ~TIM_CR1_CMS;
+    TIM3->CNT = 0;
+    TIM3->PSC = 16; 
+    TIM3->ARR = 999; 
+    TIM3->DIER |= TIM_DIER_UIE;  
+    NVIC->ISER[0] |= (1 << 29);
+    TIM3->CR1 |= TIM_CR1_CEN;
+}   

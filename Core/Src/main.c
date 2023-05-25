@@ -7,12 +7,16 @@
 #include <math.h>
 #include <string.h>
 uint32_t time20ms = 0;
+uint32_t time5000ms = 0;
 uint8_t data;
 
 uart2 Uart2;
 uint32_t temp=0;
 uint32_t count;
-
+int state=0;
+int run=0;
+int acc=0;
+int rerun=0;
 
 void TIM1_UP_TIM10_IRQHandler(void) 
 {   
@@ -21,10 +25,22 @@ void TIM1_UP_TIM10_IRQHandler(void)
     {
         time20ms=0;
         
-        if(gpio_read(GPIOC,6)==0)
+        if(gpio_read(GPIOD,11)==0)
         {
-          gpio_write(GPIOB,0,1);
+            run=1;
+            strcpy(Uart2.buffer, "");
         }
+        if(gpio_read(GPIOC,6)==0||(Uart2.buffer[0]=='S'&&Uart2.buffer[1]=='t'&&Uart2.buffer[2]=='o'&&Uart2.buffer[3]=='p'))
+        {
+            run=0;
+            rerun=0;
+            count=0;
+        }  
+        if(gpio_read(GPIOC,7)==0)
+        {
+            time5000ms=0;
+            run=0;
+        }  
     }
     else
     {
@@ -34,19 +50,30 @@ void TIM1_UP_TIM10_IRQHandler(void)
 }
 void TIM2_IRQHandler(void) 
 {    
-  if(temp>0)
+  if(run>0)
   {
-    count++;
-    if(count==temp)
+    gpio_write(GPIOB,0,0);
+  }
+  else
+  {
+    gpio_write(GPIOB,0,1);
+  }
+  if(acc==1 && run==0)
+  {
+    time5000ms++;
+    if(time5000ms==5000)
     {
-      gpio_write(GPIOB,0,1);
-      count=0;
-      temp=0;
+      run=1;
     }
   }
   TIM2->SR &= ~TIM_SR_UIF;   
 }
 
+void TIM3_IRQHandler(void) 
+{    
+  
+  TIM3->SR &= ~TIM_SR_UIF;   
+}
 
 void USART2_IRQHandler(void) {
     if (USART2->SR & USART_SR_RXNE) 
@@ -88,7 +115,7 @@ int main(void)
   //IO init
   gpio_init(GPIOD,11,1);//b1
   gpio_init(GPIOD,12,1);//s1 *****logic1*****
-  gpio_init(GPIOD,13,1);//s2    *****logic1*****
+  gpio_init(GPIOD,13,1);//s2 *****logic1*****
   gpio_init(GPIOC,6,1);//b2
   gpio_init(GPIOC,7,1);//b3
   gpio_init(GPIOE,14,1);//b4
@@ -98,33 +125,43 @@ int main(void)
   gpio_write(GPIOB,0,1);
   while (1)
   {
-    if(gpio_read(GPIOA,15)==0)
+    
+    if(gpio_read(GPIOD,13)==1 )
     {
-        
-        if(gpio_read(GPIOD,13)==1)
+        acc=1;
+        rerun=0;
+
+    }
+    if(gpio_read(GPIOD,12)==1 && state==0)
+    {
+        run=0;
+        if(acc==1)
         {
-          gpio_write(GPIOB,0,0);
-        }
-        if(gpio_read(GPIOD,12)==1||gpio_read(GPIOC,6)==0)
-        {
-          gpio_write(GPIOB,0,1);
+          acc=0;
+          count++;
+          uart_sendstring(revert(count));
+          while(gpio_read(GPIOD,12)>0);
+          state=1;
+          rerun=1;
         }
         
     }
-    else
+    if(gpio_read(GPIOD,12)==0)
     {
-        if(gpio_read(GPIOD,11)==0)
-        {
-          gpio_write(GPIOB,0,0);
-        }
-        if(gpio_read(GPIOC,6)==0)
-        {
-          gpio_write(GPIOB,0,1);
-        }
+      if(rerun==1)
+      {
+        run=1;
+      }
+        
+      state=0;
     }
     
     
+  
+  
+  
   }
+  
 
 }
 

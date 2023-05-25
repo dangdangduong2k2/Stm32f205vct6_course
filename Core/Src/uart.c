@@ -27,9 +27,9 @@ void uart2_init(void)
 void uart_sendchar(uint8_t ch)
 {
    
-    while (!(USART1->SR & USART_SR_TXE));
+    while (!(USART2->SR & USART_SR_TXE));
 
-    USART1->DR = ch;
+    USART2->DR = ch;
 }
 
 
@@ -54,5 +54,15 @@ int convert(const char* chuoi) {
         i++;
     }
     return so;
+}
+
+char* revert(int so) {
+    char* chuoi;
+    int chieu_dai = snprintf(NULL, 0, "%d", so); 
+    chuoi = (char*)malloc((chieu_dai + 1) * sizeof(char));  
+    
+    snprintf(chuoi, chieu_dai + 1, "%d", so); 
+    
+    return chuoi;
 }
 

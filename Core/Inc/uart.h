@@ -11,6 +11,8 @@ void uart2_init(void);
 void uart_sendchar(uint8_t ch);
 void uart_sendstring(const char* str);
 int convert(const char* chuoi);
+char* revert(int so);
+
 typedef struct
 {
     uint8_t data;
