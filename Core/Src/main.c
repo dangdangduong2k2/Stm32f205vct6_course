@@ -4,6 +4,7 @@
 #include "timer.h" 
 #include "uart.h" 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <string.h>
 uint32_t time20ms = 0;
@@ -53,7 +54,6 @@ void TIM3_IRQHandler(void)
       Uart2.user_buffer[2]=Uart2.buffer[2];
       Uart2.user_buffer[3]=Uart2.buffer[3];
       Uart2.user_buffer[4]=Uart2.buffer[4];
-
       Uart2.accept=0;
       Uart2.timer50ms=0;
       Uart2.buffer[0]='\0';
@@ -103,6 +103,8 @@ int main(void)
   gpio_init(GPIOB,2,0);
   timer1_init();
   timer2_init();
+  timer3_init();
+
   uart2_init();
   
   //IO init

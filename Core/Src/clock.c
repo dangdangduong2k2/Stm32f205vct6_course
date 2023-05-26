@@ -22,6 +22,8 @@ void system_clock_peripheral_init(void)
     RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
 
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    
+    RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 
     RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 }
