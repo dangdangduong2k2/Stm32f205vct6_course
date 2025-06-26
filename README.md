@@ -1,31 +1,36 @@
-# 📘 Stm32f103vct6_course
+# 📘 Stm32f205vct6_course
 
-This repository provides a collection of **bare-metal firmware examples** for the STM32F103VCT6 microcontroller, focusing on **direct register-level programming** (no HAL, no CMSIS, no SPL). It's structured as a hands-on course to help understand how STM32 peripherals work internally.
+This repository provides a collection of **bare-metal firmware examples** for the **STM32F205VCT6** microcontroller, written using **direct register access** (no HAL, no CMSIS, no SPL). It's designed for learning how STM32 peripherals work from the ground up.
 
 ---
 
-## 🧩 Covered Topics
+## 🧠 What’s inside?
 
-- ✅ GPIO Input/Output via `GPIOx->CRL/CRH/ODR/IDR`
-- ✅ UART initialization and communication via `USARTx` registers
-- ✅ EXTI (external interrupt) using `AFIO`, `EXTI`, and `NVIC`
-- ✅ Timer and PWM configuration with `TIMx` registers
-- ✅ ADC conversion with direct setup
-- ✅ Delay using SysTick (`SysTick->LOAD/VAL/CTRL`)
-- ✅ NVIC setup and interrupt priorities
+Each module demonstrates the configuration of one or more peripherals using their memory-mapped registers — helping you deeply understand how the STM32F2 series operates at the hardware level.
 
-All code avoids abstraction layers and accesses hardware registers directly.
+---
+
+## 🧩 Topics Covered
+
+- ✅ GPIO (input/output using `MODER`, `ODR`, `IDR`)
+- ✅ UART (register-level config for TX/RX via `USARTx`)
+- ✅ External Interrupts (EXTI + NVIC + SYSCFG)
+- ✅ Timers for delay and PWM
+- ✅ ADC (single channel read, polling method)
+- ✅ Delay using `SysTick`
+- ✅ Clock configuration via `RCC` and `FLASH`
+- ✅ Vector table relocation and memory remap (if needed)
 
 ---
 
 ## ⚙️ Toolchain
 
-- 💻 **IDE**: STM32CubeIDE or Keil uVision (can be used for debugging and flashing)
-- 🛠 **Compiler**: `arm-none-eabi-gcc` (if using Makefile)
-- 🔧 **Startup & Linker**: You can use default CMSIS startup or write your own for learning
-- 📍 **Target MCU**: STM32F103VCT6 (Cortex-M3, 256 KB Flash)
+- 💻 **IDE**: STM32CubeIDE, Keil, or VS Code with Makefile
+- 🔧 **Compiler**: `arm-none-eabi-gcc`
+- 🛠 **Startup & Linker**: Custom `startup.s` and `linker.ld` (or CMSIS ones)
+- 🧱 **Target MCU**: STM32F205VCT6 (Cortex-M3, 256 KB Flash, 100 pins)
 
 ---
 
-## 📦 Project Structure
+## 📁 Folder Structure
 
